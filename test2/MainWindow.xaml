@@ -1,0 +1,138 @@
+﻿<Window x:Class="test2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:test2"
+        mc:Ignorable="d"
+        Title="Simple Browser" Height="720" Width="1024" Background="#FF2E2E2E" MinHeight="500" MinWidth="500"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Icon.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Style cho TabItem Header -->
+            <Style TargetType="TabItem">
+                <Setter Property="HeaderTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Content.TabTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}}}"
+                                           VerticalAlignment="Center"
+                                           Margin="5 0 5 0"
+                                           Foreground="White"/>
+                                <Button x:Name="CloseTabButton"
+                                        Grid.Column="1"
+                                        Style="{StaticResource NavigationButtonStyle}"
+                                        Width="20" Height="20" Margin="0 0 5 0"
+                                        Click="CloseTabButton_Click">
+                                    <Viewbox Width="10" Height="10">
+                                        <Path Data="{StaticResource crossxbtnicon}" Fill="White"/>
+                                    </Viewbox>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="#FF4A4A4A"/>
+                <Setter Property="BorderBrush" Value="#FF2E2E2E"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Margin" Value="2 0 0 0"/>
+                <Setter Property="Padding" Value="5 0 0 0"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF2E2E2E"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <!-- Title Bar / Window Controls -->
+            <RowDefinition Height="Auto"/>
+            <!-- Tab Headers -->
+            <RowDefinition Height="*"/>
+            <!-- Tab Content -->
+        </Grid.RowDefinitions>
+
+        <!-- Title Bar / Window Controls -->
+        <Border Grid.Row="0" Background="#FF1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="MinimizeButton"  Click="MinimizeButton_Click">
+                    <Viewbox Width="12" Height="12">
+                        <Path Data="{StaticResource Minimize}" Fill="White"/>
+                    </Viewbox>
+                </Button>
+                <Button x:Name="MaximizeRestoreButton"  Click="MaximizeRestoreButton_Click">
+                    <Viewbox Width="12" Height="12">
+                        <Path Data="{StaticResource Tab}" Fill="White"/>
+                    </Viewbox>
+                </Button>
+                <Button x:Name="CloseButton"  Background="#FFD82D2D" Click="CloseButton_Click">
+                    <Viewbox Width="12" Height="12">
+                        <Path Data="{StaticResource crossxbtnicon}" Fill="White"/>
+                    </Viewbox>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Tab Headers and Add Tab Button -->
+        <Grid Grid.Row="1" Background="#FF2E2E2E">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl x:Name="BrowserTabControl" Grid.Column="0" SelectionChanged="BrowserTabControl_SelectionChanged"
+                        Background="#FF2E2E2E" BorderBrush="Transparent" TabStripPlacement="Top" >
+                <!-- Content của TabItem sẽ không chứa BrowserTab mà sẽ trống -->
+                <TabControl.Resources>
+                    <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate/>
+                                <!-- Để trống, chúng ta sẽ quản lý content riêng -->
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+            </TabControl>
+
+
+            <!-- Add Tab Button -->
+            <Button x:Name="AddTabButton" Grid.Column="1" Width="30" Height="30" Padding="0" Margin="5 0 5 0"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    Click="AddTabButton_Click">
+                <Viewbox Width="18" Height="18">
+                    <Path Data="{StaticResource add_tab}" Fill="White"/>
+                </Viewbox>
+            </Button>
+        </Grid>
+
+        <!-- Tab Content will be rendered here by TabControl -->
+        <ContentControl x:Name="TabContentHost" Grid.Row="2" Content="{Binding SelectedItem.Content, ElementName=BrowserTabControl}"/>
+        <!-- Đây là nơi chứa BrowserTab được chọn -->
+        <Grid Grid.Row="2" x:Name="BrowserContentHost">
+            <!-- BrowserTab sẽ được thêm vào đây bằng code-behind -->
+        </Grid>
+    </Grid>
+
+    <Window.Style>
+        <Style TargetType="Window">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
+        </Style>
+    </Window.Style>
+</Window>

@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Browser Navigation Bar -->
-        <local:BrowserNavigationBar x:Name="NavigationBar" Grid.Row="0"/>
+        <local:BrowserNavigationBar x:Name="NavigationBar" Grid.Row="0" Loaded="NavigationBar_Loaded"/>
 
         <!-- CefSharp Browser -->
         <cefsharp:ChromiumWebBrowser x:Name="Browser"

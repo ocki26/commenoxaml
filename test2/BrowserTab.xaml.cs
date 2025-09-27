@@ -77,5 +77,10 @@ namespace test2
         {
             NavigationBar.NavigateTo(url);
         }
+
+        private void NavigationBar_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -62,12 +62,26 @@ namespace test2
             }
         }
 
+
         private void NavigateFromAddressBar()
         {
-            string url = AddressTextBox.Text;
-            if (!string.IsNullOrWhiteSpace(url))
+            string input = AddressTextBox.Text;
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            // Kiểm tra xem input có phải là một URL hợp lệ không
+            if (Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult) &&
+                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
-                NavigateTo(url);
+                // Nếu là URL hợp lệ, điều hướng trực tiếp
+                NavigateTo(uriResult.AbsoluteUri);
+            }
+            else
+            {
+                // Nếu không phải là URL hợp lệ, coi đây là truy vấn tìm kiếm
+                // Mã hóa chuỗi tìm kiếm để đảm bảo URL hợp lệ
+                string encodedQuery = Uri.EscapeDataString(input);
+                string searchUrl = $"https://www.google.com/search?q={encodedQuery}";
+                NavigateTo(searchUrl);
             }
         }
 
@@ -75,10 +89,11 @@ namespace test2
         {
             if (CurrentBrowser != null)
             {
-                // Kiểm tra và thêm scheme nếu cần
-                if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+                // Vẫn giữ kiểm tra HTTPS mặc định nếu URL không có scheme rõ ràng
+                if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                    !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
-                    url = "https://" + url; // Mặc định dùng HTTPS
+                    url = "https://" + url;
                 }
                 CurrentBrowser.Address = url;
             }

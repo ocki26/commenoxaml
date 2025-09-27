@@ -59,7 +59,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="35"/>
             <!-- Title Bar / Window Controls -->
             <RowDefinition Height="Auto"/>
             <!-- Tab Headers -->
@@ -70,18 +70,18 @@
         <!-- Title Bar / Window Controls -->
         <Border Grid.Row="0" Background="#FF1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="MinimizeButton"  Click="MinimizeButton_Click">
-                    <Viewbox Width="12" Height="12">
+                <Button Style="{DynamicResource NavigationButtonStyle}" x:Name="MinimizeButton"  Click="MinimizeButton_Click">
+                    <Viewbox Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 10">
                         <Path Data="{StaticResource Minimize}" Fill="White"/>
                     </Viewbox>
                 </Button>
-                <Button x:Name="MaximizeRestoreButton"  Click="MaximizeRestoreButton_Click">
-                    <Viewbox Width="12" Height="12">
+                <Button Style="{DynamicResource NavigationButtonStyle}"  x:Name="MaximizeRestoreButton"  Click="MaximizeRestoreButton_Click">
+                    <Viewbox Width="25" Height="25">
                         <Path Data="{StaticResource Tab}" Fill="White"/>
                     </Viewbox>
                 </Button>
-                <Button x:Name="CloseButton"  Background="#FFD82D2D" Click="CloseButton_Click">
-                    <Viewbox Width="12" Height="12">
+                <Button Style="{DynamicResource BtnStyleCloseApp}" x:Name="CloseButton"  Background="Transparent" Click="CloseButton_Click">
+                    <Viewbox Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 5 7">
                         <Path Data="{StaticResource crossxbtnicon}" Fill="White"/>
                     </Viewbox>
                 </Button>
@@ -103,7 +103,7 @@
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate/>
-                                <!-- Để trống, chúng ta sẽ quản lý content riêng -->
+                           
                             </Setter.Value>
                         </Setter>
                     </Style>

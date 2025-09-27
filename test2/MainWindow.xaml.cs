@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -129,7 +130,7 @@ namespace test2
 
             // Thiết lập DataContext cho Header nếu bạn muốn binding phức tạp hơn
             // (Hiện tại HeaderTemplate đã tự động binding đến Content.TabTitle)
-            // newTabItem.SetBinding(TabItem.DataContextProperty, new Binding(".") { Source = newBrowserTab });
+            newTabItem.SetBinding(TabItem.DataContextProperty, new Binding(".") { Source = newBrowserTab });
 
             BrowserTabControl.Items.Add(newTabItem);
             BrowserTabControl.SelectedItem = newTabItem; // Chọn tab vừa thêm

@@ -48,7 +48,7 @@
 
         <!-- Reload Button -->
         <Button x:Name="ReloadButton" Grid.Column="2" Style="{StaticResource NavigationButtonStyle}" Click="ReloadButton_Click">
-            <Viewbox Style="{StaticResource IconViewboxStyle}">
+            <Viewbox Width="25" Height="25" Style="{StaticResource IconViewboxStyle}">
                 <Path Data="{StaticResource LoadBtnIcon}" Fill="White"/>
             </Viewbox>
         </Button>
@@ -60,19 +60,15 @@
             </Viewbox>
         </Button>
 
-        <!-- Address Bar -->
+        <!-- Address Bar content -->
         <Border Grid.Column="4" Background="#FF4A4A4A" CornerRadius="8" Margin="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <!-- Lock Icon -->
                     <ColumnDefinition Width="*"/>
-                    <!-- Address TextBox -->
                     <ColumnDefinition Width="Auto"/>
-                    <!-- Search Button -->
                 </Grid.ColumnDefinitions>
 
-                <!-- Lock/Info Icon -->
                 <Viewbox Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0">
                     <Path x:Name="SecurityIcon" Data="{StaticResource LockBtnIcon}" Fill="White"/>
                 </Viewbox>
@@ -85,9 +81,11 @@
                          Foreground="White"
                          FontSize="14"
                          Padding="5 0 5 0"
-                         KeyUp="AddressTextBox_KeyUp"/>
+                         KeyUp="AddressTextBox_KeyUp"
+                         TextChanged="AddressTextBox_TextChanged"
+                         LostFocus="AddressTextBox_LostFocus"
+                         GotFocus="AddressTextBox_GotFocus"/>
 
-                <!-- Search Button (Optional, can just use Enter in TextBox) -->
                 <Button x:Name="SearchButton" Grid.Column="2" Style="{StaticResource NavigationButtonStyle}" Click="SearchButton_Click">
                     <Viewbox Style="{StaticResource IconViewboxStyle}">
                         <Path Data="{StaticResource SearchBtnIcon}" Fill="White"/>
@@ -96,7 +94,53 @@
             </Grid>
         </Border>
 
-        <!-- Menu Button (Placeholder for now) -->
+        <!-- Popup để hiển thị gợi ý -->
+        <Popup x:Name="SuggestionsPopup" StaysOpen="False"
+               PlacementTarget="{Binding ElementName=AddressTextBox}"
+               Placement="Bottom"
+               AllowsTransparency="True"
+               VerticalOffset="5"
+               Grid.Column="4" Width="800">
+            <Border Background="#FF4A4A4A" BorderBrush="#FF5A5A5A" BorderThickness="1" CornerRadius="4">
+                <ListBox x:Name="SuggestionsListBox"
+                         Background="Transparent"
+                         BorderBrush="Transparent"
+                         Foreground="White"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MaxHeight="300"
+                         SelectionChanged="SuggestionsListBox_SelectionChanged"
+                         PreviewMouseUp="SuggestionsListBox_PreviewMouseUp">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="Border" Padding="{TemplateBinding Padding}"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#FF6A6A6A"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#FF7A7A7A"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Border>
+        </Popup>
+
+        <!-- Menu Button -->
         <Button x:Name="MenuButton" Grid.Column="6" Style="{StaticResource NavigationButtonStyle}" Click="MenuButton_Click">
             <Viewbox Style="{StaticResource IconViewboxStyle}">
                 <Path Data="{StaticResource MenuBtnIcon}" Fill="White"/>

@@ -19,34 +19,44 @@
             <Style TargetType="TabItem">
                 <Setter Property="HeaderTemplate">
                     <Setter.Value>
-                        <DataTemplate>
-                            <Grid Background="Transparent">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Content.TabTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}}}"
-                                           VerticalAlignment="Center"
-                                           Margin="5 0 5 0"
-                                           Foreground="White"/>
-                                <Button x:Name="CloseTabButton"
-                                        Grid.Column="1"
-                                        Style="{StaticResource NavigationButtonStyle}"
-                                        Width="20" Height="20" Margin="0 0 5 0"
-                                        Click="CloseTabButton_Click">
-                                    <Viewbox Width="10" Height="10">
-                                        <Path Data="{StaticResource crossxbtnicon}" Fill="White"/>
-                                    </Viewbox>
-                                </Button>
-                            </Grid>
+                        <DataTemplate >
+                            <!-- Thay Grid trực tiếp bằng Border chứa Grid -->
+                            <Border Background="#E0DDDC" CornerRadius="4" Width="70"  >
+                                <!-- Thêm CornerRadius và đặt Background tại đây -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Content.TabTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}}}"
+                                   VerticalAlignment="Center"
+                                   Margin="10 3 10 3"
+                                   Foreground="Black"
+                                   FontSize="10"/>
+                                    <Button x:Name="CloseTabButton"
+                                Grid.Column="1"
+                                Style="{StaticResource NavigationButtonStyle}"
+                                Width="20" Height="20" Margin="0 0 7 0"
+                                Click="CloseTabButton_Click">
+                                        <Viewbox Width="12" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 4 4">
+                                            <Path Data="{StaticResource crossxbtnicon}" Fill="Black"/>
+                                            <!-- Thay Fill="White" thành Fill="Black" để nhìn rõ hơn trên nền sáng -->
+                                        </Viewbox>
+                                    </Button>
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Background" Value="#FF4A4A4A"/>
-                <Setter Property="BorderBrush" Value="#FF2E2E2E"/>
+                <!-- Các Setter khác cho TabItem -->
+                <Setter Property="Background" Value="Transparent"/>
+                <!-- Đặt Background của TabItem thành Transparent để Border bên trong được hiển thị -->
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <!-- Đặt BorderBrush của TabItem thành Transparent -->
                 <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Margin" Value="2 0 0 0"/>
-                <Setter Property="Padding" Value="5 0 0 0"/>
+                <Setter Property="Margin" Value="5 0 0 0"/>
+                <Setter Property="Padding" Value="0"/>
+                <!-- Đặt Padding của TabItem về 0 hoặc rất nhỏ để Border chiếm toàn bộ không gian -->
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="#FF2E2E2E"/>
@@ -81,7 +91,7 @@
                     </Viewbox>
                 </Button>
                 <Button Style="{DynamicResource BtnStyleCloseApp}" x:Name="CloseButton"  Background="Transparent" Click="CloseButton_Click">
-                    <Viewbox Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 5 7">
+                    <Viewbox Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 10 8">
                         <Path Data="{StaticResource crossxbtnicon}" Fill="White"/>
                     </Viewbox>
                 </Button>
@@ -98,8 +108,8 @@
             <TabControl x:Name="BrowserTabControl" Grid.Column="0" SelectionChanged="BrowserTabControl_SelectionChanged"
                         Background="#FF2E2E2E" BorderBrush="Transparent" TabStripPlacement="Top" >
                 <!-- Content của TabItem sẽ không chứa BrowserTab mà sẽ trống -->
-                <TabControl.Resources>
-                    <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                <TabControl.Resources >
+                    <Style  TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate/>

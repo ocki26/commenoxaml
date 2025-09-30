@@ -28,6 +28,8 @@ namespace test2
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
 
             AddTab("https://www.google.com");
+
+
         }
 
         // --- Window Control Handlers ---

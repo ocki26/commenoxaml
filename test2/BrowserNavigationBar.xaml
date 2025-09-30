@@ -87,7 +87,7 @@
                          GotFocus="AddressTextBox_GotFocus"/>
 
                 <Button x:Name="SearchButton" Grid.Column="2" Style="{StaticResource NavigationButtonStyle}" Click="SearchButton_Click">
-                    <Viewbox Style="{StaticResource IconViewboxStyle}">
+                    <Viewbox VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 7 0" Style="{StaticResource IconViewboxStyle}">
                         <Path Data="{StaticResource SearchBtnIcon}" Fill="White"/>
                     </Viewbox>
                 </Button>

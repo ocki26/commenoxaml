@@ -12,15 +12,25 @@ namespace test2
 {
     public partial class MainWindow : Window
     {
+        // Khai báo thông tin proxy (có thể đọc từ cấu hình hoặc UI)
+        private const string ProxyServer = "142.111.124.238:6258";
+        private const string ProxyUsername = "pvbubstg";
+        private const string ProxyPassword = "87asjfv371b9";
+
         public MainWindow()
         {
+            // 1. Cấu hình CefSettings cho Proxy
             CefSettings settings = new CefSettings();
             settings.CefCommandLineArgs.Add("enable-media-stream", "1");
-            // RẤT QUAN TRỌNG: Thiết lập đường dẫn cache để CefSharp lưu trữ dữ liệu
-            // Điều này giúp trình duyệt hoạt động ổn định hơn và nhớ trạng thái giữa các lần mở
             settings.CachePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "test2\\CefSharpCache");
-            // Không nên dùng "no-sandbox" trong sản phẩm thực tế
-            // settings.CefCommandLineArgs.Add("no-sandbox", "1");
+
+            // Cấu hình proxy nếu cần
+            if (!string.IsNullOrEmpty(ProxyServer))
+            {
+                settings.CefCommandLineArgs.Add("proxy-server", ProxyServer);
+                // Nếu proxy cần xác thực, CustomRequestHandler sẽ xử lý sau
+            }
+            // else {  settings.CefCommandLineArgs.Add("no-proxy-server", "1"); // Tùy chọn: Tắt hoàn toàn proxy nếu không muốn dùng }
 
             Cef.Initialize(settings);
 
@@ -28,8 +38,6 @@ namespace test2
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
 
             AddTab("https://www.google.com");
-
-
         }
 
         // --- Window Control Handlers ---
@@ -101,18 +109,14 @@ namespace test2
                     }
                     else
                     {
-                        // Chọn lại tab cuối cùng nếu tab hiện tại bị đóng
-                        // Hoặc chọn tab kế bên nếu tab bị đóng không phải là tab cuối cùng
                         if (BrowserTabControl.SelectedIndex == -1)
                         {
-                            BrowserTabControl.SelectedIndex = 0; // Chọn tab đầu tiên nếu không có gì được chọn
+                            BrowserTabControl.SelectedIndex = 0;
                         }
                         else if (BrowserTabControl.SelectedIndex >= BrowserTabControl.Items.Count)
                         {
                             BrowserTabControl.SelectedIndex = BrowserTabControl.Items.Count - 1;
                         }
-                        // Trigger selection changed manually if needed to update UI
-                        // BrowserTabControl_SelectionChanged(BrowserTabControl, null);
                     }
                 }
             }
@@ -122,30 +126,31 @@ namespace test2
         private void AddTab(string url)
         {
             BrowserTab newBrowserTab = new BrowserTab();
+
+            // 2. Gán RequestHandler cho mỗi ChromiumWebBrowser
+            // Mỗi ChromiumWebBrowser cần một RequestHandler riêng để xử lý xác thực
+            newBrowserTab.Browser.RequestHandler = new CustomRequestHandler(ProxyUsername, ProxyPassword);
+
             newBrowserTab.Navigate(url);
 
             TabItem newTabItem = new TabItem
             {
-                Header = "Loading...", // Tiêu đề ban đầu
-                Tag = newBrowserTab // Lưu BrowserTab trong Tag của TabItem
+                Header = "Loading...",
+                Tag = newBrowserTab
             };
 
-            // Thiết lập DataContext cho Header nếu bạn muốn binding phức tạp hơn
-            // (Hiện tại HeaderTemplate đã tự động binding đến Content.TabTitle)
             newTabItem.SetBinding(TabItem.DataContextProperty, new Binding(".") { Source = newBrowserTab });
 
             BrowserTabControl.Items.Add(newTabItem);
-            BrowserTabControl.SelectedItem = newTabItem; // Chọn tab vừa thêm
+            BrowserTabControl.SelectedItem = newTabItem;
         }
 
         private void BrowserTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Xóa tất cả các BrowserTab cũ khỏi ContentHost
             BrowserContentHost.Children.Clear();
 
             if (BrowserTabControl.SelectedItem is TabItem selectedTabItem)
             {
-                // Lấy BrowserTab từ Tag của TabItem
                 BrowserTab selectedBrowserTab = selectedTabItem.Tag as BrowserTab;
                 if (selectedBrowserTab != null)
                 {
@@ -166,7 +171,6 @@ namespace test2
 
         protected override void OnClosed(EventArgs e)
         {
-            // Dispose tất cả các BrowserTab khi đóng cửa sổ
             foreach (TabItem item in BrowserTabControl.Items)
             {
                 if (item.Tag is BrowserTab browserTab)

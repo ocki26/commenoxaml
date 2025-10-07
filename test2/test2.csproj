@@ -165,6 +165,7 @@
     <Compile Include="ControlBrowser.xaml.cs">
       <DependentUpon>ControlBrowser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CookeiManager.cs" />
     <Compile Include="CustomRequestHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

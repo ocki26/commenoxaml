@@ -12,10 +12,10 @@ namespace test2
 {
     public partial class MainWindow : Window
     {
-        // Khai báo thông tin proxy (có thể đọc từ cấu hình hoặc UI)
-        private const string ProxyServer = "142.111.124.238:6258";
-        private const string ProxyUsername = "pvbubstg";
-        private const string ProxyPassword = "87asjfv371b9";
+        // Khai báo thông tin proxy mới
+        private const string ProxyServer = "52.10.183.82:80";
+        private const string ProxyUsername = ""; // Không cần username
+        private const string ProxyPassword = ""; // Không cần password
 
         public MainWindow()
         {
@@ -28,7 +28,8 @@ namespace test2
             if (!string.IsNullOrEmpty(ProxyServer))
             {
                 settings.CefCommandLineArgs.Add("proxy-server", ProxyServer);
-                // Nếu proxy cần xác thực, CustomRequestHandler sẽ xử lý sau
+                // Với proxy free, không cần xác thực, nên CustomRequestHandler sẽ không được dùng cho mục đích xác thực.
+                // Tuy nhiên, chúng ta vẫn sẽ gán nó để giữ cấu trúc nhất quán nếu bạn muốn thêm logic khác vào đó sau này.
             }
             // else {  settings.CefCommandLineArgs.Add("no-proxy-server", "1"); // Tùy chọn: Tắt hoàn toàn proxy nếu không muốn dùng }
 
@@ -128,7 +129,8 @@ namespace test2
             BrowserTab newBrowserTab = new BrowserTab();
 
             // 2. Gán RequestHandler cho mỗi ChromiumWebBrowser
-            // Mỗi ChromiumWebBrowser cần một RequestHandler riêng để xử lý xác thực
+            // Mặc dù proxy free không cần xác thực, CustomRequestHandler vẫn được gán.
+            // Phương thức GetAuthCredentials sẽ không được kích hoạt vì không có xác thực.
             newBrowserTab.Browser.RequestHandler = new CustomRequestHandler(ProxyUsername, ProxyPassword);
 
             newBrowserTab.Navigate(url);
